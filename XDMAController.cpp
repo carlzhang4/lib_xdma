@@ -118,10 +118,8 @@ uint32_t XDMAController::readReg(uint32_t addr)
 void XDMAController::readBypassReg(uint32_t addr,uint64_t* res)
 {
    if(checkBypass() == 1){
-      volatile __m512i* rPtr = (__m512i*) (((uint64_t) by_base)  + (uint64_t) ((uint32_t) addr << 6));
-      for(int i=0;i<8;i++){
-         res[i] = rPtr[0][i];
-      }
+	   volatile __m512i* wPtr = (__m512i*) (((uint64_t) by_base) + (uint64_t) ((uint32_t) addr << 6));
+	   _mm512_store_epi64(res, wPtr[0]);
    }else{
       cout<<"bypass disabled, read failed!\n";
    }
